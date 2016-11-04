@@ -294,7 +294,7 @@
                                 <div class="entry-header ng-isolate-scope entry-add">
                                     <div class="ng-scope">
                                         <span class="entry-title ng-binding pbox-trigger">今天要做</span>
-                                        <span href="javascript:;" class="ignore-elm pbox-trigger lcfont lc-arrow-down-circle ng-scope inaction" data-align="left">
+                                        <span href="javascript:;" class="ignore-elm pbox-trigger lcfont lc-arrow-down-circle inaction " data-align="left">
                                         </span>
                                         <div class="progressbar-container">
                                             <div class="progress ng-isolate-scope" value="entry | entryCompletedPercent">
@@ -555,7 +555,7 @@
                     <div class="entry-header" type="board">
                       <div>
                         <span class="entry-title ">pp</span>
-                        <span href="javascript:;" class="ignore-elm pbox-trigger lcfont lc-arrow-down-circle" data-align="left"></span>
+                        <span href="javascript:;" class="ignore-elm pbox-trigger lcfont lc-arrow-down-circle down_icon" data-align="left" style="display: none;"></span>
                         <div class="progressbar-container">
                           <div class="progress ng-isolate-scope">
                             <div class="progress-bar" style="width: 60%;"></div>
@@ -577,8 +577,8 @@
                               <span class="task-title ">ssss</span></div>
                           </div>
                           <div class="entry-tasks-cont">
-                            <div class="add-composer" id="add_content">
-                              <textarea class="form-control taskName " name="newTaskName" style="overflow: hidden; word-wrap: break-word; resize: none; height: 52px;"></textarea>
+                            <div class="add-composer" id="add_content" style="display: none">
+                              <textarea class="form-control taskName " id="task_con" name="newTaskName" style="overflow: hidden; word-wrap: break-word; resize: none; height: 52px;"></textarea>
                               <div class="add-composer-actor">
                                 <a href="javascript:;" class="actor pbox-trigger">
                                   <i class="lcfont lc-schedule-o "></i>
@@ -841,6 +841,8 @@
 
 <script>
    $(function(){
+    //向下按钮
+    
     $('.jointask-click').click(function(){
       $('.jointask').show();
       $('.mytask').hide();
@@ -904,6 +906,18 @@
      var num=$(this).parents().children('.my-task-cont').find('input.active').length;
      $(this).parents().children('.entry-header').find('.task-num').text(num+"/").show();
      })
+     //设置中选项卡
+     
+     var tabs = function(tab, con) {
+        tab.click(function() {
+          var indx = tab.index(this);
+          tab.removeClass('active');
+          $(this).addClass('active');
+          con.hide();
+          con.eq(indx).show();
+        })
+      }
+      tabs($(".modal-tab a"), $('.con'));
    });
 </script>
 <script>
@@ -963,13 +977,25 @@
 </script>
 <script>
   $(function(){
-     $('#progress_add').on("click",function(){
-      $('#add_content').show();
-      $(this).hide();
-     })
-     $("#sure").on("click",function(){
-       $('#progress_add').show();
-       $('#add_content').hide();
+      //新增加的确定
+      $('body').on('click','#progress_add',function(){
+         $(this).parent().parent().find('#add_content').css('display','block');
+         $(this).hide();
+       })
+       $('body').on('click','#sure',function(){
+       $(this).parent().parent().parent().parent().siblings().find('#progress_add').show();
+       $(this).parent().parent().parent().find('#add_content').hide();
+       var task_contant =' <div class="task-card slide-trigger pbox-trigger ">';
+           task_contant +='<div class="task-main">'  ;
+           task_contant +='<a href="javascript:;" class="task-check">'  ;  
+           task_contant +='<input type="checkbox"></a>'  ;  
+           task_contant +='<span class="task-title ">'+$('#task_con').val()+'</span></div></div>'  ;  
+
+           $(this).parent().parent().before(task_contant);               
+                              
+                                
+                              
+                          
      })
 
      //设置对号
@@ -1001,7 +1027,7 @@
           $(".section-project").css("display", "none");
           $(".section-setting").css("display", "block");
         })
-        tabs($(".modal-tab a"), $('.con'));
+       
 
         //新建列表
         $(".add_list").on("click", function() {
@@ -1016,15 +1042,14 @@
         });
         $(".lc-show .sure").on("click", function() {
           var text = $(".lc-show .form-control").val();
-          alert(text);
                       
           var Content = "<div class='entry-wrapper ignore-item'><div class='entry-item'>";
           Content += "<div class='entry-header' type='board'><div class='entry-item'><div>";
           Content += "<span class='entry-title '>" + text +"</span>";
-          Content += "<span href='javascript:;' class='ignore-elm pbox-trigger lcfont lc-arrow-down-circle' data-align='left'></span>";
+          Content += "<span href='javascript:;' class='ignore-elm pbox-trigger lcfont lc-arrow-down-circle down_icon' data-align='left' style='display:none'></span>";
           Content += "<div class='progressbar-container'><div class='progress'>";
           Content += "<div class='progress-bar' style='width: 60%;'></div></div>";
-          Content += "<span><b class='pedding-num '>"+3+"/</b>"+5+"</span></div></div></div>";
+          Content += "<span><b class='pedding-num '>"+3+"/</b>"+5+"</span></div></div></div></div>";
           Content += "<div class='entry-tasks'>";
           Content += "<div class='task-card slide-trigger pbox-trigger '><div class='task-main'>";
           Content += "<a href='javascript:;' class='task-check'><input type='checkbox' /></a>";
@@ -1032,11 +1057,11 @@
           Content += "<div class='task-card slide-trigger pbox-trigger '><div class='task-main'>";
           Content += "<a href='javascript:;' class='task-check'><input type='checkbox' /></a>";
           Content += "<span class='task-title'>ssss</span></div></div>";
-          Content += "<div class='entry-tasks-cont'><div class='add-composer' id='add_content'>";
-          Content += "<textarea class='form-control taskName ' name='newTaskName' style='overflow: hidden; word-wrap: break-word; resize: none; height: 52px;'></textarea>";
-          Content += "<div class='add-composer-actor'><i class='lcfont lc-schedule-o '></i></a>";
-          Content += "<a href='javascript:;' class='actor pbox-trigger '><i class='lcfont lc-user-add '></i>";
-          Content += "</a><label><input type='checkbox' > <span class='checkbox-text' >仅参与者可见</span></label></div>"
+          Content += "<div class='entry-tasks-cont'><div class='add-composer' id='add_content' style='display:none'>";
+          Content += "<textarea class='form-control taskName 'id='task_con' name='newTaskName' style='overflow: hidden; word-wrap: break-word; resize: none; height: 52px;'></textarea>";
+          Content += "<div class='add-composer-actor'><a href='javascript:;' class='actor pbox-trigger'><i class='lcfont lc-schedule-o '></i></a>";
+          Content += "<a href='javascript:;' class='actor pbox-trigger '><i class='lcfont lc-user-add '></i></a>";
+          Content += "<label><input type='checkbox' > <span class='checkbox-text' >仅参与者可见</span></label></div>"
           Content += "<div class='add-composer-footer'><button class='btn btn-primary' id='sure' data-loading-text='保存中...'>确定</button>"
           Content += "<a class='btn btn-link '>取消</a>"
           Content += "</div></div></div></div>";
@@ -1044,15 +1069,11 @@
           Content += "</div></div></div>";
           $("#add").before(Content);
         });
-        var tabs = function(tab, con) {
-        tab.click(function() {
-          var indx = tab.index(this);
-          tab.removeClass('active');
-          $(this).addClass('active');
-          con.hide();
-          con.eq(indx).show();
-        })
-      }
+   
+
+       //确认项目
+      
+
   })
 </script>
 
